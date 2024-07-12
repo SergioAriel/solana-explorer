@@ -120,7 +120,7 @@ export const getStaticProps = (async ({ params }) => {
 
 
     const infoAddress = async () => {
-        const responseBalance = await fetch(`https://mainnet.helius-rpc.com/?api-key=${apiKey}`, {
+        const responseBalance = await fetch(`https://mainnet.helius-rpc.com/?api-key=${process.env.API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

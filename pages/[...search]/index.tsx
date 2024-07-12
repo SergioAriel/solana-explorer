@@ -139,12 +139,12 @@ export const getStaticPaths = (async () => {
 })
 
 export const getStaticProps = (async ({ params }) => {
-  const apiKey = '0b5915a2-c7b0-4978-958c-08f66e389f82'
+
   const search = params?.search
 
 
   const infoAddress = async () => {
-    const responseBalance = await fetch(`https://mainnet.helius-rpc.com/?api-key=${apiKey}`, {
+    const responseBalance = await fetch(`https://mainnet.helius-rpc.com/?api-key=${process.env.API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export const getStaticProps = (async ({ params }) => {
     });
     const { result: infoAddress } = await responseBalance.json();
     if(infoAddress){
-      const urlTransaction = `https://api.helius.xyz/v0/addresses/${search?.[0]}/transactions?api-key=${apiKey}${search?.[1] ? `&before=${search?.[1]}` : ""}`
+      const urlTransaction = `https://api.helius.xyz/v0/addresses/${search?.[0]}/transactions?api-key=${process.env.API_KEY}`
       console.log(urlTransaction)
       const responseTransactions = await fetch(urlTransaction, {
         method: 'GET',
