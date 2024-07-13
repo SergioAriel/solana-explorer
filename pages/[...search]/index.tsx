@@ -8,18 +8,22 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Address({ data }: any) {
   const router = useRouter()
-  console.log(data)
   return (
     <>
       <div
-        className="w-max bg-white h-20 p-4"
+        className="w-96 bg-white h-32 p-4"
       >
         <div
-          className="flex flex-col items-center text-black "
+          className="flex flex-col items-center text-black gap-4"
         >
-          <h3 className="font-semibold text-base text-gray-700">Overview</h3>
           <div
-            className="flex gap-4 text-sm"
+            className="flex flex-col w-full items-center"
+          >
+            <h3 className="font-semibold text-base text-gray-700">Overview</h3>
+            <span className="w-full truncate font-semibold text-xs text-gray-300">{router?.query?.search?.[0]}</span>
+          </div>
+          <div
+            className="flex gap-4 text-base"
           >
             <span>SOL</span>
             <span>
@@ -38,8 +42,8 @@ export default function Address({ data }: any) {
       >
         <div className="flex flex-col bg-white w-full md:w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
           <div className="flex flex-col w-full max-w-full flex-grow flex-1">
-            <div className="sticky top-0 flex justify-center w-full px-4 h-12">
-              <h3 className="font-semibold text-base text-gray-700">Transactions</h3>
+            <div className="sticky top-0 flex items-center justify-center w-full px-4 h-12">
+              <h3 className="font-semibold text-base text-gray-700">Coins</h3>
             </div>
             <div
               className="flex flex-col"
@@ -178,20 +182,21 @@ export default function Address({ data }: any) {
         </div>
       </div>
 
-      <div className="flex flex-wrap bg-white w-full md:w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
+      <div className="flex flex-wrap bg-white w-full md:w-1/2 gap-4 h-96 overflow-y-auto shadow-lg rounded ">
 
         {
           data?.nfts?.items?.map((nft: any)=>{
             return(
               <div
                 key={nft.id}
-                className="w-20 h-20"
+                className="w-28 h-28"
               >
                 <Image 
                   alt=''
                   src={nft.content.links.image}
                   width={200}
                   height={200}
+                  className="h-full w-full"
                 />
               </div>
             )
