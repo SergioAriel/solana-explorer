@@ -8,7 +8,6 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Address({ data }: any) {
     const router = useRouter()
     const [tabSelected, setTabSelected] = useState<string>('')
-    console.log(data)
     return (
 
         <div className="flex flex-col bg-white w-full mb-6 shadow-lg rounded ">
@@ -31,30 +30,30 @@ export default function Address({ data }: any) {
                     </div>
                 </div>
             </div>
-            <table className="items-center bg-transparent w-full">
+            <table className="items-center bg-transparent h-96 w-full">
                 <thead
                     className="block w-full"
                 >
                     <tr
                         className="table table-fixed w-full"
                     >
-                        <th className="px-6 bg-gray-200 text-gray-600  border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
+                        <th className="px-6 bg-gray-200 text-gray-600 border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
                             Signature
                         </th>
-                        <th className="px-6 bg-gray-200 text-gray-600  border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
+                        <th className="px-6 bg-gray-200 text-gray-600 border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
                             Block
                         </th>
-                        <th className="px-6 bg-gray-200 text-gray-600  border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
+                        <th className="px-6 bg-gray-200 text-gray-600 border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
                             Time
                         </th>
-                        <th className="px-6 bg-gray-200 text-gray-600  border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
+                        <th className="px-6 bg-gray-200 text-gray-600 border border-solid py-3 text-xs uppercase border-l-0 border-r-0 text-ellipsis font-semibold ">
                             By
                         </th>
                     </tr>
                 </thead>
 
                 <tbody
-                    className="block w-full"
+                    className="block w-full h-[calc(100%-3rem)] overflow-y-auto"
                 >
                     {
                         data?.transactions && data?.transactions?.map((txn: any) => {
@@ -74,7 +73,7 @@ export default function Address({ data }: any) {
                                         {txn.signature}
                                     </th>
                                     <th
-                                        className=" border-t-0  truncate px-6 align-middle border-l-0 border-r-0 text-xs p-4 "
+                                        className=" border-t-0 items-center text-center truncate px-6 align-middle border-l-0 border-r-0 text-xs p-4 "
 
                                     >
                                         {txn.slot}
@@ -147,7 +146,6 @@ export const getStaticProps = (async ({ params }) => {
                 method: 'GET',
             });
             const transactions = await responseTransactions.json();
-            console.log(search, urlTransaction, transactions)
             if (transactions.length) {
                 const data = {
                     type: "address",

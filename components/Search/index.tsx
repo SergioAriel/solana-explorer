@@ -6,7 +6,7 @@ export const  Search = () => {
     const [search, setSearch] = useState<string>('')
 
     return (
-        <div className="flex w-[30rem] rounded bg-white">
+        <div className="flex w-full rounded bg-white">
             <input
                 type="search"
                 className="w-full border-none bg-transparent px-4 py-1 text-gray-900 focus:outline-none"

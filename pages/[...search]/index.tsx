@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { useState } from "react";
 import { GetStaticProps, GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,19 +12,19 @@ export default function Address({ data }: any) {
   return (
     <>
       <div
-        className="w-full bg-white h-56 p-4"
+        className="w-max bg-white h-20 p-4"
       >
         <div
-          className="flex flex-col text-black "
+          className="flex flex-col items-center text-black "
         >
-          <h4>Overview</h4>
+          <h3 className="font-semibold text-base text-gray-700">Overview</h3>
           <div
             className="flex gap-4 text-sm"
           >
             <span>SOL</span>
             <span>
               {
-                data?.balance?.nativeBalance?.lamports / 1000000000
+                data?.balance?.nativeBalance?.lamports / (10 ** 8)
               }
             </span>
             <span>$ {data?.balance?.nativeBalance?.total_price.toFixed(6)}</span>
@@ -33,11 +34,11 @@ export default function Address({ data }: any) {
       </div>
 
       <div
-        className="flex gap-10"
+        className="flex flex-col md:flex-row gap-10"
       >
-        <div className="flex flex-col bg-white w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
+        <div className="flex flex-col bg-white w-full md:w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
           <div className="flex flex-col w-full max-w-full flex-grow flex-1">
-            <div className="flex justify-between w-full px-4 h-12 items-center">
+            <div className="sticky top-0 flex justify-center w-full px-4 h-12">
               <h3 className="font-semibold text-base text-gray-700">Transactions</h3>
             </div>
             <div
@@ -46,7 +47,9 @@ export default function Address({ data }: any) {
               <table
                 className="w-full"
               >
-                <thead>
+                <thead
+                  className="sticky top-12"
+                >
                   <tr
                     className="bg-gray-200 text-gray-600 border border-solid"
                   >
@@ -59,8 +62,6 @@ export default function Address({ data }: any) {
                   {
                     data?.balance?.items?.map((item: any) => {
                       if (item.token_info.price_info) {
-
-                        console.log(10 ^ item.token_info.decimals)
                         return (
                           <tr
                             key={item.id}
@@ -81,24 +82,24 @@ export default function Address({ data }: any) {
         </div>
 
 
-        <div className="flex flex-col bg-white w-1/2  h-96 overflow-y-auto shadow-lg rounded ">
+        <div className="flex flex-col bg-white w-full md:w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
           <div className=" sticky top-0 bg-white rounded-t h-12  px-4 py-3 border-0">
             <div className="flex flex-wrap items-center">
               <div className="flex justify-between w-full px-4 max-w-full flex-grow flex-1">
                 <h3 className="font-semibold text-base text-gray-700">Transactions</h3>
                 <button
                   onClick={() => {
-
-                    console.log([router?.query?.search?.[0], data?.transactions[data?.transactions?.length - 1].signature])
-                    router.push({
-                      pathname: `/transactions/[...transactions]`,
-                      query: {
-                        transactions: [router?.query?.search?.[0], data?.transactions[data?.transactions?.length - 1].signature]
-                      }
-                    })
+                    if(router?.query?.search?.[0]){
+                      router.push({
+                        pathname: `/transactions/[...transactions]`,
+                        query: {
+                          transactions: [router?.query?.search?.[0]]
+                        }
+                      })
+                    }
                   }}
                 >
-                  SeeAll
+                  See All
                 </button>
               </div>
             </div>
@@ -177,6 +178,28 @@ export default function Address({ data }: any) {
         </div>
       </div>
 
+      <div className="flex flex-wrap bg-white w-full md:w-1/2 h-96 overflow-y-auto shadow-lg rounded ">
+
+        {
+          data?.nfts?.items?.map((nft: any)=>{
+            return(
+              <div
+                key={nft.id}
+                className="w-20 h-20"
+              >
+                <Image 
+                  alt=''
+                  src={nft.content.links.image}
+                  width={200}
+                  height={200}
+                />
+              </div>
+            )
+
+          })
+        }
+      </div>
+
     </>
   );
 }
@@ -190,10 +213,7 @@ export const getStaticPaths = (async () => {
 })
 
 export const getStaticProps = (async ({ params }) => {
-
   const search = params?.search
-
-
   const infoAddress = async () => {
     const url = `https://mainnet.helius-rpc.com/?api-key=${process.env.API_KEY}`;
     const response = await fetch(url, {
@@ -211,18 +231,30 @@ export const getStaticProps = (async ({ params }) => {
           displayOptions: {
             showNativeBalance: true,
           },
-          page: 1
         },
       }),
     });
     const { result: balance } = await response.json();
 
-    console.log(balance)
-
+    const responseNFT = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 'my-id',
+        method: 'searchAssets',
+        params: {
+          ownerAddress: search?.[0],
+          tokenType: 'nonFungible',
+        },
+      }),
+    });
+    const { result: nfts } = await responseNFT.json();
 
     if (balance) {
       const urlTransaction = `https://api.helius.xyz/v0/addresses/${search?.[0]}/transactions?api-key=${process.env.API_KEY}`
-      console.log(urlTransaction)
       const responseTransactions = await fetch(urlTransaction, {
         method: 'GET',
       });
@@ -231,6 +263,7 @@ export const getStaticProps = (async ({ params }) => {
         const data = {
           type: "address",
           transactions,
+          nfts,
           balance
         }
         return { props: { data } }
@@ -238,6 +271,7 @@ export const getStaticProps = (async ({ params }) => {
     }
     const data = {
       type: "address",
+      nfts,
       balance
     }
     return { props: { data } }
