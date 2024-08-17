@@ -31,7 +31,7 @@ export default function Address({ data }: any) {
                 data?.balance?.nativeBalance?.lamports / (10 ** 8)
               }
             </span>
-            <span>$ {data?.balance?.nativeBalance?.total_price.toFixed(6)}</span>
+            <span>$ {data?.balance?.nativeBalance?.total_price?.toFixed(6)}</span>
           </div>
 
         </div>
@@ -72,7 +72,7 @@ export default function Address({ data }: any) {
                             className="[&>:first-child]:text-black text-gray-500"
                           >
                             <th>{item.token_info.symbol}</th>
-                            <th>{(item.token_info.balance / (10 ** item.token_info.decimals)).toFixed(5)}</th>
+                            <th>{(item.token_info.balance / (10 ** item.token_info.decimals))?.toFixed(5)}</th>
 
                           </tr>
                         )
@@ -210,14 +210,14 @@ export default function Address({ data }: any) {
 }
 
 
-export const getStaticPaths = (async () => {
-  return {
-    paths: [],
-    fallback: true, // false or "blocking"
-  }
-})
+// export const getStaticPaths = (async () => {
+//   return {
+//     paths: [],
+//     fallback: true, // false or "blocking"
+//   }
+// })
 
-export const getStaticProps = (async ({ params }) => {
+export const getServerSideProps = (async ({ params }) => {
   const search = params?.search
   const infoAddress = async () => {
     const url = `https://mainnet.helius-rpc.com/?api-key=${process.env.API_KEY}`;

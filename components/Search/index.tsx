@@ -10,11 +10,11 @@ export const  Search = () => {
             <input
                 type="search"
                 className="w-full border-none bg-transparent px-4 py-1 text-gray-900 focus:outline-none"
-                placeholder="search"
+                placeholder="Write/Paste your Address here!"
                 onChange={e => setSearch(e.target.value)}
             />
             <button
-                className={`m-2 rounded px-4 py-2 font-semibold text-black ${(search) ? 'bg-purple-500' : 'bg-gray-500 cursor-not-allowed'}`}
+                className={`m-2 rounded px-4 py-2 font-semibold text-white ${(search) ? 'bg-purple-500' : 'bg-gray-500 cursor-not-allowed'}`}
                 disabled={!search}
                 onClick={() => {
                     if (!(router.asPath === `search/${search}`)) {
