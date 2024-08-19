@@ -210,14 +210,14 @@ export default function Address({ data }: any) {
 }
 
 
-// export const getStaticPaths = (async () => {
-//   return {
-//     paths: [],
-//     fallback: true, // false or "blocking"
-//   }
-// })
+export const getStaticPaths = (async () => {
+  return {
+    paths: [],
+    fallback: true, // false or "blocking"
+  }
+})
 
-export const getServerSideProps = (async ({ params }) => {
+export const getStaticProps = (async ({ params }) => {
   const search = params?.search
   const infoAddress = async () => {
     const url = `https://mainnet.helius-rpc.com/?api-key=${process.env.API_KEY}`;
